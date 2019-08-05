@@ -1,4 +1,7 @@
-// prettier.config.js or .prettierrc.js
+/**
+ * prettier.config.js
+ * Config: https://prettier.io/docs/en/options.html#print-width
+ */
 module.exports = {
     // 一行最多 100 字符
     printWidth: 100,
