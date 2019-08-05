@@ -1,4 +1,5 @@
 const path = require('path');
+const { CheckerPlugin } = require('awesome-typescript-loader');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
@@ -7,13 +8,16 @@ const isProd = process.env.NODE_ENV !== 'development';
 module.exports = {
     entry: {
         home: path.resolve(__dirname, '../pages/home/index.tsx'),
-        list: path.resolve(__dirname, '../pages/list/index.tsx'),
     },
 
     output: {
         // contenthash 代码不变更，打包后的 hash 值就不会变
-        filename: isProd ? 'static/js/[name].[contenthash].js' : 'static/js/[name].js',
-        chunkFilename: isProd ? 'static/js/[name].[contenthash].chunk.js' : 'static/js/[name].chunk.js',
+        filename: isProd
+            ? 'static/js/[name].[contenthash].js'
+            : 'static/js/[name].js',
+        chunkFilename: isProd
+            ? 'static/js/[name].[contenthash].chunk.js'
+            : 'static/js/[name].chunk.js',
         path: path.resolve(__dirname, '../dist'),
         // publicPath: 'cdn.com.cn' // cdn 路径
     },
@@ -26,7 +30,7 @@ module.exports = {
             },
             {
                 test: /\.tsx?$/,
-                use: 'ts-loader',
+                use: ['babel-loader', 'awesome-typescript-loader', 'eslint-loader'],
                 exclude: /node_modules/,
             },
             {
@@ -35,9 +39,9 @@ module.exports = {
                     loader: 'file-loader',
                     options: {
                         name: '[name]_[hash].[ext]',
-                        output: 'static/images/'
-                    }
-                }
+                        output: 'static/images/',
+                    },
+                },
             },
             {
                 test: /\.(sc|sa|c)ss$/,
@@ -46,8 +50,8 @@ module.exports = {
                         loader: MiniCssExtractPlugin.loader,
                         options: {
                             hmr: !isProd,
-                            reloadAll: true
-                        }
+                            reloadAll: true,
+                        },
                     },
                     {
                         loader: 'css-loader',
@@ -57,18 +61,18 @@ module.exports = {
 
                             modules: true,
                             // css modules 模块化的 css
-                        }
+                        },
                     },
                     'postcss-loader',
                     'sass-loader',
-                ]
+                ],
                 /**
                  * loader 的执行顺序：从下到上，从右到左
                  * style-loader: 把 CSS 文件挂载到页面上
                  * css-loader: 分析几个 CSS 文件，然后合并成一个文件
                  */
-            }
-        ]
+            },
+        ],
     },
 
     optimization: {
@@ -81,57 +85,48 @@ module.exports = {
          */
         // usedExports: true,
         splitChunks: {
-            chunks: 'all',   // 对什么代码分隔？ all、async
-            minSize: 30000,  // 大于 30000bytes 30kb 才会进行分割
-            maxSize: 0,      // 进一步的代码分割 0 表示不分割
-            minChunks: 1,    // 一个模块至少被引用用了多少次，才会被分割
+            chunks: 'all', // 对什么代码分隔？ all、async
+            minSize: 30000, // 大于 30000bytes 30kb 才会进行分割
+            maxSize: 0,   // 进一步的代码分割 0 表示不分割
+            minChunks: 1, // 一个模块至少被引用用了多少次，才会被分割
             maxAsyncRequests: 5,
             maxInitialRequests: 3,
             automaticNameDelimiter: '_',
             name: true,
-            cacheGroups: {  // 缓存组：把合适的模块打包在一起
+            cacheGroups: { // 缓存组：把合适的模块打包在一起
                 vendors: {
-                    test: /[\\/]node_modules[\\/]/,  // 引入的文件是否在 node modules 中
-                    priority: -10,   // 优先级
-                    name: 'vendors'
+                    test: /[\\/]node_modules[\\/]/, // 引入的文件是否在 node modules 中
+                    priority: -10, // 优先级
+                    name: 'vendors',
                 },
-                default: {   // 非 node modules 中的文件会放在 default 中的文件中
+                default: { // 非 node modules 中的文件会放在 default 中的文件中
                     minChunks: 2,
                     priority: -20,
-                    reuseExistingChunk: true  //  重复使用已经存在的模块
-                }
-            }
+                    reuseExistingChunk: true, //  重复使用已经存在的模块
+                },
+            },
         },
-        // runtimeChunk: {
-        //     name: 'runtime'
-        // }
     },
 
     resolve: {
-        alias: {
-
-        }
+        alias: {},
     },
 
     // plugin 可以在 build 运行到某个时刻的时候做一些事情
     plugins: [
+        new CheckerPlugin(),
         new HtmlWebpackPlugin({
             filename: './html/home/index.html',
             template: path.resolve(__dirname, '../pages/home/index.html'),
             chunks: ['vendors', 'home'],
-            hash: true
-        }),
-        new HtmlWebpackPlugin({
-            filename: './html/list/index.html',
-            template: path.resolve(__dirname, '../pages/list/index.html'),
-            chunks: ['vendors', 'list'],
-            hash: true
+            hash: true,
         }),
         new MiniCssExtractPlugin({
-            filename: isProd ? './static/css/[name].[contenthash].css' : './static/css/[name].css' ,
+            filename: isProd
+                ? './static/css/[name].[contenthash].css'
+                : './static/css/[name].css',
             chunkFilename: isProd ? '[id].[contenthash].css' : '[id].css',
-            ignoreOrder: false
-        })
-    ]
+            ignoreOrder: false,
+        }),
+    ],
 };
-

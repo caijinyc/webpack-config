@@ -13,7 +13,7 @@ module.exports = merge(common, {
 
     devServer: {
         port: 1234,
-        // open: true,
+        open: true,
         contentBase: path.resolve(__dirname, '../dist'),
         hot: true, // 模块热更新
         // hotOnly: true,

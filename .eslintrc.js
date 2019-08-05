@@ -1,17 +1,13 @@
 module.exports = {
-  parser: '@typescript-eslint/parser',
+  extends: [
+    'eslint-config-alloy/react',
+    'eslint-config-alloy/typescript',
+  ],
   env: {
     browser: true,
     es6: true,
   },
-  extends: [
-    'plugin:@typescript-eslint/recommended',
-    'airbnb',
-  ],
-  globals: {
-    Atomics: 'readonly',
-    SharedArrayBuffer: 'readonly',
-  },
+  globals: {},
   parserOptions: {
     ecmaFeatures: {
       jsx: true,
@@ -19,9 +15,20 @@ module.exports = {
     ecmaVersion: 2018,
     sourceType: 'module',
   },
+  settings: {
+    react: {
+      version: 'detect',
+    },
+  },
   plugins: [
     'react',
-    'react-hooks'
+    'react-hooks',
   ],
-  rules: {},
-}
+  rules: {
+    indent: ['error', 4],
+    'comma-dangle': [
+      'error', {
+        objects: 'always-multiline',
+      }],
+  },
+};
