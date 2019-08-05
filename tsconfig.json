@@ -1,11 +1,28 @@
 {
   "compilerOptions": {
+    "experimentalDecorators": true,
+    "baseUrl": "./",
+    "paths": {
+      "components": [
+        "./components/*"
+      ],
+      "pages": [
+        "./pages/*"
+      ],
+      "assets": [
+        "./assets/*"
+      ],
+      "helper": [
+        "./helper/*"
+      ]
+    },
     "outDir": "./dist/",
     "module": "es6",
     "target": "es5",
     "allowJs": true,
     "jsx": "react",
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "sourceMap": true
   },
   "exclude": [
     "./node_modules/"

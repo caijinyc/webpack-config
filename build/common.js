@@ -3,7 +3,7 @@ const { CheckerPlugin } = require('awesome-typescript-loader');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
-const isProd = process.env.NODE_ENV !== 'development';
+const isProduction = process.env.NODE_ENV !== 'development';
 
 module.exports = {
     entry: {
@@ -12,10 +12,8 @@ module.exports = {
 
     output: {
         // contenthash 代码不变更，打包后的 hash 值就不会变
-        filename: isProd
-            ? 'static/js/[name].[contenthash].js'
-            : 'static/js/[name].js',
-        chunkFilename: isProd
+        filename: isProduction ? 'static/js/[name].[contenthash].js' : 'static/js/[name].js',
+        chunkFilename: isProduction
             ? 'static/js/[name].[contenthash].chunk.js'
             : 'static/js/[name].chunk.js',
         path: path.resolve(__dirname, '../dist'),
@@ -49,7 +47,7 @@ module.exports = {
                     {
                         loader: MiniCssExtractPlugin.loader,
                         options: {
-                            hmr: !isProd,
+                            hmr: !isProduction,
                             reloadAll: true,
                         },
                     },
@@ -87,19 +85,21 @@ module.exports = {
         splitChunks: {
             chunks: 'all', // 对什么代码分隔？ all、async
             minSize: 30000, // 大于 30000bytes 30kb 才会进行分割
-            maxSize: 0,   // 进一步的代码分割 0 表示不分割
+            maxSize: 0, // 进一步的代码分割 0 表示不分割
             minChunks: 1, // 一个模块至少被引用用了多少次，才会被分割
             maxAsyncRequests: 5,
             maxInitialRequests: 3,
             automaticNameDelimiter: '_',
             name: true,
-            cacheGroups: { // 缓存组：把合适的模块打包在一起
+            cacheGroups: {
+                // 缓存组：把合适的模块打包在一起
                 vendors: {
                     test: /[\\/]node_modules[\\/]/, // 引入的文件是否在 node modules 中
                     priority: -10, // 优先级
                     name: 'vendors',
                 },
-                default: { // 非 node modules 中的文件会放在 default 中的文件中
+                default: {
+                    // 非 node modules 中的文件会放在 default 中的文件中
                     minChunks: 2,
                     priority: -20,
                     reuseExistingChunk: true, //  重复使用已经存在的模块
@@ -109,7 +109,14 @@ module.exports = {
     },
 
     resolve: {
-        alias: {},
+        extensions: ['.js', '.ts', '.tsx', '.json', '.scss', '.css'], // 自动解析文件扩展名，也就是不用输入 .js .ts ...等
+        alias: {
+            pages: path.resolve(__dirname, '../pages'),
+            components: path.resolve(__dirname, '../components'),
+            helper: path.resolve(__dirname, '../helper'),
+            assets: path.resolve(__dirname, '../assets'),
+            styles: path.resolve(__dirname, '../styles'),
+        },
     },
 
     // plugin 可以在 build 运行到某个时刻的时候做一些事情
@@ -122,10 +129,10 @@ module.exports = {
             hash: true,
         }),
         new MiniCssExtractPlugin({
-            filename: isProd
+            filename: isProduction
                 ? './static/css/[name].[contenthash].css'
                 : './static/css/[name].css',
-            chunkFilename: isProd ? '[id].[contenthash].css' : '[id].css',
+            chunkFilename: isProduction ? '[id].[contenthash].css' : '[id].css',
             ignoreOrder: false,
         }),
     ],

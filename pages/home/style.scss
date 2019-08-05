@@ -1,8 +1,5 @@
-html {
-  background: red;
-}
+@import 'styles/normalize.scss';
 
 h1 {
   transform: translateX(50px);
-  box-sizing: border-box;
 }

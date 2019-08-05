@@ -10,9 +10,9 @@ module.exports = merge(common, {
     mode: 'production',
     devtool: 'cheap-source-map',  // development
     optimization: {
-        minimizer: [new TerserJSPlugin(),new OptimizeCSSAssetsPlugin({})],
+        minimizer: [new TerserJSPlugin(), new OptimizeCSSAssetsPlugin({})],
     },
     plugins: [
         new CleanWebpackPlugin(),
     ],
-})
+});

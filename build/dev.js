@@ -27,13 +27,13 @@ module.exports = merge(common, {
                 target: 'http://www.cdn.com',
                 // secure: false,  // 对 https 网站的代理需要设置
                 pathRewrite: {
-                    'header.json': 'demo.json'   // 请求 header.json 文件时 代理到 请求 demo.json
-                }
-            }
-        }
+                    'header.json': 'demo.json',   // 请求 header.json 文件时 代理到 请求 demo.json
+                },
+            },
+        },
     },
 
     plugins: [
-        new HotModuleReplacementPlugin()
-    ]
-})
+        new HotModuleReplacementPlugin(),
+    ],
+});
